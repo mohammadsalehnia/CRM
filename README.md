@@ -1,4 +1,4 @@
-**# CRM in Java :coffee:
+# CRM in Java :coffee:
 
 This is a simple **"CRM"** done with **Java** programming language.
 
