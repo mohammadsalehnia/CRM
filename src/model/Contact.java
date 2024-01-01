@@ -3,18 +3,17 @@ package model;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Contact {
-    private static final AtomicInteger nextId = new AtomicInteger(1);
-    private int id;
+    private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
+    private Integer id;
     private String value;
     private final ContactType type;
 
     public Contact(String value, ContactType type) {
-        this.id = nextId.getAndIncrement();
+        this.id = ID_COUNTER.incrementAndGet();
         this.setValue(value);
         this.type = type;
     }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

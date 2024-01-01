@@ -5,23 +5,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Customer {
     private final CustomerType type;
-    private static final AtomicInteger nextId = new AtomicInteger(1);
+    private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
+    private Integer id;
     private ArrayList<Contact> contacts = new ArrayList<>();
-
-    private int id;
     private String name;
     private String address;
 
     protected Customer(String name, CustomerType type) {
-        this.id = nextId.getAndIncrement();
+        this.id = ID_COUNTER.getAndIncrement();
         this.name = name;
         this.type = type;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
