@@ -8,6 +8,19 @@ import java.util.stream.Collectors;
 
 public class CustomerService {
 
+    private static final CustomerService INSTANCE;
+    public static CustomerService getInstance(){
+        return INSTANCE;
+    }
+
+    static {
+        INSTANCE = new CustomerService();
+    }
+
+    private CustomerService(){
+
+    }
+
     private ArrayList<Customer> customers = new ArrayList<>();
 
 
