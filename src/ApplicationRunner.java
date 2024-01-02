@@ -1,9 +1,9 @@
-import service.CustomerService;
+import view.ConsoleUI;
 
 public class ApplicationRunner {
     public static void main(String[] args) {
-        try (CustomerService customerService = new CustomerService()) {
-            customerService.run();
+        try (ConsoleUI consoleUI = new ConsoleUI()) {
+            consoleUI.startMenu();
         }
     }
 }
