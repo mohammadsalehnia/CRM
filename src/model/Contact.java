@@ -10,9 +10,10 @@ public class Contact {
 
     public Contact(String value, ContactType type) {
         this.id = ID_COUNTER.incrementAndGet();
-        this.setValue(value);
+        this.value = value;
         this.type = type;
     }
+
     public Integer getId() {
         return id;
     }

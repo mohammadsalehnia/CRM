@@ -2,7 +2,6 @@ package view;
 
 import model.*;
 import service.CustomerService;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -47,6 +46,10 @@ public class ConsoleUI implements AutoCloseable {
                     deleteCustomer();
                     break;
                 }
+                case "6": {
+                    printAllDeletedCustomers();
+                    break;
+                }
                 case "0": {
                     System.out.println("You closed the application");
                     break;
@@ -69,6 +72,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("3. Search customer");
         System.out.println("4. Edit customer");
         System.out.println("5. Delete customer");
+        System.out.println("6. Print all deleted customers");
         System.out.println("0. Exit");
         System.out.println("--------------------------");
     }
@@ -194,11 +198,25 @@ public class ConsoleUI implements AutoCloseable {
     }
 
     private void printAllCustomers() {
-        List<Customer> allCustomers = customerService.getAllCustomers();
+        List<Customer> allCustomers = customerService.getActiveCustomers();
         if (allCustomers.isEmpty()) {
             System.out.println("List is empty!");
         } else {
             System.out.println("----------------- Customers List -------------");
+            for (Customer customer : allCustomers) {
+                System.out.println(customer.toString());
+                System.out.println("-------------------------------------------");
+            }
+            System.out.println("------------------ End List ------------------");
+        }
+    }
+
+    private void printAllDeletedCustomers() {
+        List<Customer> allCustomers = customerService.getDeletedCustomers();
+        if (allCustomers.isEmpty()) {
+            System.out.println("List is empty!");
+        } else {
+            System.out.println("----------------- Deleted Customers List -------------");
             for (Customer customer : allCustomers) {
                 System.out.println(customer.toString());
                 System.out.println("-------------------------------------------");
@@ -493,7 +511,8 @@ public class ConsoleUI implements AutoCloseable {
         System.out.print("Enter the ID of the customer you want to delete: ");
         int customerIdToDelete = scanner.nextInt();
         scanner.nextLine();
-        customerService.deleteCustomer(customerIdToDelete);
+//        customerService.deleteCustomer(customerIdToDelete);
+        customerService.safeDeleteCustomer(customerIdToDelete);
     }
 
 }

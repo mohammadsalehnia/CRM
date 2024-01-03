@@ -27,12 +27,8 @@ public class LegalCustomer extends Customer {
     @Override
     public String toString() {
         return "LegalCustomer{" +
-                "id='" + this.getId() + '\'' +
-                ", name='" + this.getName() + '\'' +
+                super.toString() +
                 ", brand='" + this.getBrand() + '\'' +
-                ", website='" + this.getWebsite() + '\'' +
-                ", address='" + this.getAddress() + '\'' +
-                ", contacts='" + this.getContacts() + '\'' +
-                '}';
+                ", website='" + this.getWebsite();
     }
 }

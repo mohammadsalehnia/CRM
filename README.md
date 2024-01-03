@@ -30,6 +30,7 @@ CRM Application Started
 3. Search customer
 4. Edit customer
 5. Delete customer
+6. Print all deleted customers
 0. Exit
 -------------------------
 Select a menu item: 

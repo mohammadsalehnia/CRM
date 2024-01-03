@@ -26,6 +26,9 @@ public class IndividualCustomer extends Customer {
 
     @Override
     public String toString() {
-        return "IndividualCustomer{" + "id='" + this.getId() + '\'' + ", name='" + this.getName() + '\'' + ", lastName='" + this.getLastName() + '\'' + ", identicalCode='" + this.getIdenticalCode() + '\'' + ", address='" + this.getAddress() + '\'' + ", contacts='" + this.getContacts() + '\'' + '}';
+        return "IndividualCustomer{" +
+                super.toString() +
+                ", lastName='" + this.getLastName() + '\'' +
+                ", identicalCode='" + this.getIdenticalCode();
     }
 }
