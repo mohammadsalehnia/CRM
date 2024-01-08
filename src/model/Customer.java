@@ -59,11 +59,11 @@ public abstract class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "type=" + type +
+                " type=" + type +
                 ", id=" + id +
-                ", contacts=" + contacts +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                "\n contacts=" + contacts +
                 '}';
     }
 

@@ -122,10 +122,6 @@ public class CustomerService {
         customers.add(customer);
     }
 
-    public void addContactToList(Customer customer, Contact contact) {
-        customer.getContacts().add(contact);
-    }
-
     public Customer getCustomerById(int id) {
         return customers.stream()
                 .filter(customer -> !customer.getDeleted())

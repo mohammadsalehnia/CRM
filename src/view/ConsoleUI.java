@@ -2,6 +2,10 @@ package view;
 
 import model.*;
 import service.CustomerService;
+import view.component.AbstractCustomerUI;
+import view.component.IndividualCustomerUI;
+import view.component.LegalCustomerUI;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -78,11 +82,6 @@ public class ConsoleUI implements AutoCloseable {
     }
 
 
-    private String getUserInput(String message) {
-        System.out.print(message);
-        return scanner.nextLine();
-    }
-
     @Override
     public void close() {
         scanner.close();
@@ -95,65 +94,25 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("2. Legal");
         String selectedOption = getUserInput("Select a menu item: ");
 
-        switch (selectedOption) {
-            case "1": {
-                addIndividualCustomer();
-                break;
-            }
-            case "2": {
-                addLegalCustomer();
-                break;
-            }
-            default: {
-                System.out.println("Invalid Item!");
-                break;
-            }
+        AbstractCustomerUI customerUI;
+
+        if (selectedOption.equals("1")) {
+            customerUI = new IndividualCustomerUI(scanner);
+        } else {
+            customerUI = new LegalCustomerUI(scanner);
         }
-    }
 
-
-    private void addLegalCustomer() {
-
-        String name = getUserInput("Enter Name: ");
-        String brand = getUserInput("Enter Brand: ");
-        String website = getUserInput("Enter Website: ");
-        String address = getUserInput("Enter Address: ");
-
-        LegalCustomer legalCustomer = new LegalCustomer(name);
-        legalCustomer.setBrand(brand);
-        legalCustomer.setWebsite(website);
-        legalCustomer.setAddress(address);
+        Customer customer = customerUI.generateCustomer();
 
         String addContactQuestion = getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
 
         while (addContactQuestion.equalsIgnoreCase("y")) {
-            addContactTo(legalCustomer);
+            addContactTo(customer);
             addContactQuestion = getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
         }
-        customerService.addCustomer(legalCustomer);
-
+        customerService.addCustomer(customer);
     }
 
-    private void addIndividualCustomer() {
-
-        String name = getUserInput("Enter Name: ");
-        String lastName = getUserInput("Enter Last Name: ");
-        String identicalCode = getUserInput("Enter IdenticalCode: ");
-        String address = getUserInput("Enter Address: ");
-
-        IndividualCustomer individualCustomer = new IndividualCustomer(name);
-        individualCustomer.setLastName(lastName);
-        individualCustomer.setIdenticalCode(identicalCode);
-        individualCustomer.setAddress(address);
-
-        String addContactQuestion = getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
-
-        while (addContactQuestion.equalsIgnoreCase("y")) {
-            addContactTo(individualCustomer);
-            addContactQuestion = getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
-        }
-        customerService.addCustomer(individualCustomer);
-    }
 
     private void addContactTo(Customer customer) {
 
@@ -167,19 +126,19 @@ public class ConsoleUI implements AutoCloseable {
 
         switch (selectedOption) {
             case "1": {
-                addContactToList("Enter Phone Number: ", ContactType.PHONE_NUMBER, customer);
+                addContactToCustomer("Enter Phone Number: ", ContactType.PHONE_NUMBER, customer);
                 break;
             }
             case "2": {
-                addContactToList("Enter Mobile: ", ContactType.MOBILE, customer);
+                addContactToCustomer("Enter Mobile: ", ContactType.MOBILE, customer);
                 break;
             }
             case "3": {
-                addContactToList("Enter Fax: ", ContactType.FAX, customer);
+                addContactToCustomer("Enter Fax: ", ContactType.FAX, customer);
                 break;
             }
             case "4": {
-                addContactToList("Enter Email: ", ContactType.EMAIL, customer);
+                addContactToCustomer("Enter Email: ", ContactType.EMAIL, customer);
                 break;
             }
             default: {
@@ -189,11 +148,16 @@ public class ConsoleUI implements AutoCloseable {
         }
     }
 
-    private void addContactToList(String message, ContactType phoneNumber, Customer customer) {
+
+    private String getUserInput(String message) {
+        System.out.print(message);
+        return scanner.nextLine();
+    }
+
+    private void addContactToCustomer(String message, ContactType phoneNumberType, Customer customer) {
         String value = getUserInput(message);
-        Contact contact = new Contact(value, phoneNumber);
+        Contact contact = new Contact(value, phoneNumberType);
         customer.getContacts().add(contact);
-        customerService.addContactToList(customer, contact);
         System.out.println("Contact added successfully");
     }
 
@@ -356,155 +320,16 @@ public class ConsoleUI implements AutoCloseable {
 
         Customer customerToEdit = customerService.getCustomerById(customerIdToEdit);
 
+        AbstractCustomerUI customerUI;
 
         if (customerToEdit instanceof IndividualCustomer) {
-            editIndividualCustomer((IndividualCustomer) customerToEdit);
-        } else if (customerToEdit instanceof LegalCustomer) {
-            editLegalCustomer((LegalCustomer) customerToEdit);
+            customerUI = new IndividualCustomerUI(scanner);
         } else {
-            System.out.println("Invalid Item");
-        }
-    }
-
-    private void editLegalCustomer(LegalCustomer legalCustomer) {
-
-        System.out.println("It's a legal customer");
-        System.out.println("What do you want to edit?");
-        System.out.println("1. Name");
-        System.out.println("2. Brand");
-        System.out.println("3. Contacts");
-        System.out.println("4. Website");
-        System.out.println("5. Address");
-        System.out.print("Select a menu item: ");
-        String selectedOption = scanner.nextLine();
-
-        switch (selectedOption) {
-            case "1": {
-                System.out.print("Enter new Name: ");
-                legalCustomer.setName(scanner.nextLine());
-                System.out.println("Name updated");
-                break;
-            }
-            case "2": {
-                System.out.print("Enter new Brand: ");
-                legalCustomer.setBrand(scanner.nextLine());
-                System.out.println("Last Brand updated");
-                break;
-            }
-            case "3": {
-                editContact(legalCustomer);
-                break;
-            }
-            case "4": {
-                System.out.print("Enter new Website: ");
-                legalCustomer.setWebsite(scanner.nextLine());
-                System.out.println("Website updated");
-                break;
-            }
-            case "5": {
-                System.out.print("Enter new Address: ");
-                legalCustomer.setAddress(scanner.nextLine());
-                System.out.println("Address updated");
-                break;
-            }
-            default: {
-                System.out.println("Invalid Item!");
-                break;
-            }
+            customerUI = new LegalCustomerUI(scanner);
         }
 
-        System.out.println("Contact with ID " + legalCustomer.getId() + " edited successfully.");
+        customerUI.editCustomer(customerToEdit,customerService);
 
-    }
-
-    private void editIndividualCustomer(IndividualCustomer individualCustomer) {
-        System.out.println("It's a individual customer");
-        System.out.println("What do you want to edit?");
-        System.out.println("1. Name");
-        System.out.println("2. Last Name");
-        System.out.println("3. Contacts");
-        System.out.println("4. Identical Code");
-        System.out.println("5. Address");
-        System.out.print("Select a menu item: ");
-        String selectedOption = scanner.nextLine();
-
-        switch (selectedOption) {
-            case "1": {
-                System.out.print("Enter new Name: ");
-                individualCustomer.setName(scanner.nextLine());
-                System.out.println("Name updated");
-                break;
-            }
-            case "2": {
-                System.out.print("Enter new Last Name: ");
-                individualCustomer.setLastName(scanner.nextLine());
-                System.out.println("Last Name updated");
-                break;
-            }
-            case "3": {
-                editContact(individualCustomer);
-                break;
-            }
-            case "4": {
-                System.out.print("Enter new IdenticalCode: ");
-                individualCustomer.setIdenticalCode(scanner.nextLine());
-                System.out.println("Identical Code updated");
-                break;
-            }
-            case "5": {
-                System.out.print("Enter new Address: ");
-                individualCustomer.setAddress(scanner.nextLine());
-                System.out.println("Address updated");
-                break;
-            }
-            default: {
-                System.out.println("Invalid Item!");
-                break;
-            }
-        }
-
-        System.out.println("Contact with ID " + individualCustomer.getId() + " edited successfully.");
-    }
-
-    private void editContact(Customer customer) {
-        System.out.println("List of this customer contacts: ");
-        System.out.println(customer.getContacts());
-        System.out.println("End of contacts");
-
-        System.out.print("Enter the ID of the contact you want to edit: ");
-        int contactIdToEdit = scanner.nextInt();
-        scanner.nextLine();
-        Contact contactToEdit = customerService.getContentById(customer, contactIdToEdit);
-        System.out.println(contactToEdit);
-        if (contactToEdit != null) {
-
-            System.out.println("Update contact options: ");
-            System.out.println("1. Edit contact value");
-            System.out.println("2. Delete contact");
-            System.out.print("Enter update option: ");
-            String updateContactOption = scanner.nextLine();
-
-            switch (updateContactOption) {
-                case "1":
-                    System.out.print("Enter new value: ");
-                    String newValue = scanner.nextLine();
-                    contactToEdit.setValue(newValue);
-                    System.out.println("Contact updated");
-                    break;
-                case "2":
-                    if (customer.getContacts().removeIf(contact -> contact.getId() == contactIdToEdit)) {
-                        System.out.println("Contact with ID " + contactIdToEdit + " deleted successfully.");
-                    } else {
-                        System.out.println("Contact with ID " + contactIdToEdit + " not found.");
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid Item!");
-                    return;
-            }
-        } else {
-            System.out.println("Contact with ID " + contactIdToEdit + " not found.");
-        }
     }
 
     private void deleteCustomer() {
