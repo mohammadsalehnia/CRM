@@ -2,6 +2,7 @@ package view;
 
 import model.*;
 import service.CustomerService;
+import util.ScannerWrapper;
 import view.component.AbstractCustomerUI;
 import view.component.IndividualCustomerUI;
 import view.component.LegalCustomerUI;
@@ -14,7 +15,7 @@ public class ConsoleUI implements AutoCloseable {
     private final CustomerService customerService;
 
     public ConsoleUI() {
-        this.scanner = new Scanner(System.in);
+        this.scanner = ScannerWrapper.getInstance();
         this.customerService = CustomerService.getInstance();
     }
 
@@ -97,9 +98,9 @@ public class ConsoleUI implements AutoCloseable {
         AbstractCustomerUI customerUI;
 
         if (selectedOption.equals("1")) {
-            customerUI = new IndividualCustomerUI(scanner);
+            customerUI = new IndividualCustomerUI();
         } else {
-            customerUI = new LegalCustomerUI(scanner);
+            customerUI = new LegalCustomerUI();
         }
 
         Customer customer = customerUI.generateCustomer();
@@ -323,9 +324,9 @@ public class ConsoleUI implements AutoCloseable {
         AbstractCustomerUI customerUI;
 
         if (customerToEdit instanceof IndividualCustomer) {
-            customerUI = new IndividualCustomerUI(scanner);
+            customerUI = new IndividualCustomerUI();
         } else {
-            customerUI = new LegalCustomerUI(scanner);
+            customerUI = new LegalCustomerUI();
         }
 
         customerUI.editCustomer(customerToEdit,customerService);

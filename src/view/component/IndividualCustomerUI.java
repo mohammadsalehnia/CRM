@@ -7,8 +7,8 @@ import service.CustomerService;
 import java.util.Scanner;
 
 public class IndividualCustomerUI extends AbstractCustomerUI {
-    public IndividualCustomerUI(Scanner scanner) {
-        super(scanner);
+    public IndividualCustomerUI() {
+        super();
     }
 
     @Override

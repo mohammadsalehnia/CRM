@@ -3,14 +3,15 @@ package view.component;
 import model.Contact;
 import model.Customer;
 import service.CustomerService;
+import util.ScannerWrapper;
 
 import java.util.Scanner;
 
 public abstract class AbstractCustomerUI {
     protected final Scanner scanner;
 
-    public AbstractCustomerUI(Scanner scanner) {
-        this.scanner = scanner;
+    public AbstractCustomerUI() {
+        this.scanner = ScannerWrapper.getInstance();
     }
 
     public abstract Customer generateCustomer();
