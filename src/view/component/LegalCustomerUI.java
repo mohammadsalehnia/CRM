@@ -12,11 +12,12 @@ public class LegalCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public Customer generateCustomer() {
-        String name = getUserInput("Enter Name: ");
-        String brand = getUserInput("Enter Brand: ");
-        String website = getUserInput("Enter Website: ");
-        String address = getUserInput("Enter Address: ");
+    public Customer additionalGenerateCustomer(String name, String address) {
+//        String name = scannerWrapper.getUserInput("Enter Name: ");
+//        String address = scannerWrapper.getUserInput("Enter Address: ");
+        String brand = scannerWrapper.getUserInput("Enter Brand: ");
+        String website = scannerWrapper.getUserInput("Enter Website: ");
+
         LegalCustomer legalCustomer = new LegalCustomer(name);
         legalCustomer.setBrand(brand);
         legalCustomer.setWebsite(website);
@@ -36,35 +37,35 @@ public class LegalCustomerUI extends AbstractCustomerUI {
         System.out.println("3. Contacts");
         System.out.println("4. Website");
         System.out.println("5. Address");
-        System.out.print("Select a menu item: ");
-        String selectedOption = scanner.nextLine();
+
+        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
 
         switch (selectedOption) {
             case "1": {
-                System.out.print("Enter new Name: ");
-                legalCustomer.setName(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new Name: ");
+                legalCustomer.setName(userInput);
                 System.out.println("Name updated");
                 break;
             }
             case "2": {
-                System.out.print("Enter new Brand: ");
-                legalCustomer.setBrand(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new Brand: ");
+                legalCustomer.setBrand(userInput);
                 System.out.println("Last Brand updated");
                 break;
             }
             case "3": {
-                editContact(legalCustomer,customerService);
+                editContact(legalCustomer, customerService);
                 break;
             }
             case "4": {
-                System.out.print("Enter new Website: ");
-                legalCustomer.setWebsite(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new Website: ");
+                legalCustomer.setWebsite(userInput);
                 System.out.println("Website updated");
                 break;
             }
             case "5": {
-                System.out.print("Enter new Address: ");
-                legalCustomer.setAddress(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new Address: ");
+                legalCustomer.setAddress(userInput);
                 System.out.println("Address updated");
                 break;
             }

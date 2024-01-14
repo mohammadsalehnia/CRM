@@ -12,11 +12,11 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public Customer generateCustomer() {
-        String name = getUserInput("Enter Name: ");
-        String lastName = getUserInput("Enter Last Name: ");
-        String identicalCode = getUserInput("Enter IdenticalCode: ");
-        String address = getUserInput("Enter Address: ");
+    public Customer additionalGenerateCustomer(String name, String address) {
+        //        String name = scannerWrapper.getUserInput("Enter Name: ");
+//        String address = scannerWrapper.getUserInput("Enter Address: ");
+        String lastName = scannerWrapper.getUserInput("Enter Last Name: ");
+        String identicalCode = scannerWrapper.getUserInput("Enter IdenticalCode: ");
         IndividualCustomer individualCustomer = new IndividualCustomer(name);
         individualCustomer.setLastName(lastName);
         individualCustomer.setIdenticalCode(identicalCode);
@@ -25,7 +25,7 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public void editCustomer(Customer customer,CustomerService customerService) {
+    public void editCustomer(Customer customer, CustomerService customerService) {
 
         IndividualCustomer individualCustomer = (IndividualCustomer) customer;
 
@@ -36,19 +36,19 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
         System.out.println("3. Contacts");
         System.out.println("4. Identical Code");
         System.out.println("5. Address");
-        System.out.print("Select a menu item: ");
-        String selectedOption = scanner.nextLine();
+
+        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
 
         switch (selectedOption) {
             case "1": {
-                System.out.print("Enter new Name: ");
-                individualCustomer.setName(scanner.nextLine());
+                String name = scannerWrapper.getUserInput("Enter new Name: ");
+                individualCustomer.setName(name);
                 System.out.println("Name updated");
                 break;
             }
             case "2": {
-                System.out.print("Enter new Last Name: ");
-                individualCustomer.setLastName(scanner.nextLine());
+                String lastName = scannerWrapper.getUserInput("Enter new Last Name: ");
+                individualCustomer.setLastName(lastName);
                 System.out.println("Last Name updated");
                 break;
             }
@@ -57,14 +57,14 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
                 break;
             }
             case "4": {
-                System.out.print("Enter new IdenticalCode: ");
-                individualCustomer.setIdenticalCode(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new IdenticalCode: ");
+                individualCustomer.setIdenticalCode(userInput);
                 System.out.println("Identical Code updated");
                 break;
             }
             case "5": {
-                System.out.print("Enter new Address: ");
-                individualCustomer.setAddress(scanner.nextLine());
+                String userInput = scannerWrapper.getUserInput("Enter new Address: ");
+                individualCustomer.setAddress(userInput);
                 System.out.println("Address updated");
                 break;
             }

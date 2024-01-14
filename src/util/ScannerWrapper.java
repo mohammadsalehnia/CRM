@@ -4,21 +4,35 @@ import java.util.Scanner;
 
 public class ScannerWrapper implements AutoCloseable {
 
-    private static final Scanner INSTANCE;
+    private static final ScannerWrapper INSTANCE;
+    private final Scanner scanner;
 
-    public static Scanner getInstance() {
+    public static ScannerWrapper getInstance() {
         return INSTANCE;
     }
 
     static {
-        INSTANCE = new Scanner(System.in);
+        INSTANCE = new ScannerWrapper();
     }
 
     private ScannerWrapper() {
+        scanner = new Scanner(System.in);
     }
 
     @Override
     public void close() {
-        INSTANCE.close();
+        scanner.close();
+    }
+
+    public String getUserInput(String message) {
+        System.out.print(message);
+        return scanner.nextLine();
+    }
+
+    public Integer getUserInputInt(String message) {
+        System.out.print(message);
+        int value =  scanner.nextInt();
+        scanner.nextLine();
+        return value;
     }
 }
