@@ -2,9 +2,8 @@ package view.component;
 
 import model.Customer;
 import model.IndividualCustomer;
-import service.CustomerService;
-
-import java.util.Scanner;
+import service.impl.CustomerServiceImpl;
+import java.util.function.Function;
 
 public class IndividualCustomerUI extends AbstractCustomerUI {
     public IndividualCustomerUI() {
@@ -13,10 +12,8 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
 
     @Override
     public Customer additionalGenerateCustomer(String name, String address) {
-        //        String name = scannerWrapper.getUserInput("Enter Name: ");
-//        String address = scannerWrapper.getUserInput("Enter Address: ");
-        String lastName = scannerWrapper.getUserInput("Enter Last Name: ");
-        String identicalCode = scannerWrapper.getUserInput("Enter IdenticalCode: ");
+        String lastName = scannerWrapper.getUserInput("Enter Last Name: ", Function.identity());
+        String identicalCode = scannerWrapper.getUserInput("Enter IdenticalCode: ", Function.identity());
         IndividualCustomer individualCustomer = new IndividualCustomer(name);
         individualCustomer.setLastName(lastName);
         individualCustomer.setIdenticalCode(identicalCode);
@@ -25,7 +22,7 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public void editCustomer(Customer customer, CustomerService customerService) {
+    public void editCustomer(Customer customer, CustomerServiceImpl customerService) {
 
         IndividualCustomer individualCustomer = (IndividualCustomer) customer;
 
@@ -37,17 +34,17 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
         System.out.println("4. Identical Code");
         System.out.println("5. Address");
 
-        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
+        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Function.identity());
 
         switch (selectedOption) {
             case "1": {
-                String name = scannerWrapper.getUserInput("Enter new Name: ");
+                String name = scannerWrapper.getUserInput("Enter new Name: ", Function.identity());
                 individualCustomer.setName(name);
                 System.out.println("Name updated");
                 break;
             }
             case "2": {
-                String lastName = scannerWrapper.getUserInput("Enter new Last Name: ");
+                String lastName = scannerWrapper.getUserInput("Enter new Last Name: ", Function.identity());
                 individualCustomer.setLastName(lastName);
                 System.out.println("Last Name updated");
                 break;
@@ -57,13 +54,13 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
                 break;
             }
             case "4": {
-                String userInput = scannerWrapper.getUserInput("Enter new IdenticalCode: ");
+                String userInput = scannerWrapper.getUserInput("Enter new IdenticalCode: ", Function.identity());
                 individualCustomer.setIdenticalCode(userInput);
                 System.out.println("Identical Code updated");
                 break;
             }
             case "5": {
-                String userInput = scannerWrapper.getUserInput("Enter new Address: ");
+                String userInput = scannerWrapper.getUserInput("Enter new Address: ", Function.identity());
                 individualCustomer.setAddress(userInput);
                 System.out.println("Address updated");
                 break;
@@ -75,8 +72,6 @@ public class IndividualCustomerUI extends AbstractCustomerUI {
         }
 
         System.out.println("Contact with ID " + individualCustomer.getId() + " edited successfully.");
-
     }
-
 
 }

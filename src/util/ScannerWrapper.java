@@ -1,6 +1,7 @@
 package util;
 
 import java.util.Scanner;
+import java.util.function.Function;
 
 public class ScannerWrapper implements AutoCloseable {
 
@@ -24,15 +25,9 @@ public class ScannerWrapper implements AutoCloseable {
         scanner.close();
     }
 
-    public String getUserInput(String message) {
+    public <T> T getUserInput(String message, Function<String, T> convertor) {
         System.out.print(message);
-        return scanner.nextLine();
+        return convertor.apply(scanner.nextLine());
     }
 
-    public Integer getUserInputInt(String message) {
-        System.out.print(message);
-        int value =  scanner.nextInt();
-        scanner.nextLine();
-        return value;
-    }
 }

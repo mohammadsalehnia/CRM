@@ -1,11 +1,16 @@
 package view;
 
-import model.*;
+import model.Contact;
+import model.ContactType;
+import model.Customer;
+import model.CustomerType;
 import service.CustomerService;
+import service.impl.CustomerServiceImpl;
 import util.ScannerWrapper;
 import view.component.AbstractCustomerUI;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class ConsoleUI implements AutoCloseable {
     private final ScannerWrapper scannerWrapper;
@@ -13,7 +18,7 @@ public class ConsoleUI implements AutoCloseable {
 
     public ConsoleUI() {
         this.scannerWrapper = ScannerWrapper.getInstance();
-        this.customerService = CustomerService.getInstance();
+        this.customerService = CustomerServiceImpl.getInstance();
     }
 
     public void startMenu() {
@@ -25,7 +30,7 @@ public class ConsoleUI implements AutoCloseable {
 
             printMenu();
 
-            selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
+            selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Function.identity());
 
             switch (selectedOption) {
                 case "1": {
@@ -89,7 +94,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("Customer Types:");
         System.out.println("1. Individual");
         System.out.println("2. Legal");
-        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
+        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Function.identity());
 
 //        CustomerType type = CustomerType.fromValue(Integer.parseInt(selectedOption));
 //        AbstractCustomerUI customerUI = AbstractCustomerUI.fromCustomerType(type);
@@ -99,11 +104,11 @@ public class ConsoleUI implements AutoCloseable {
                 .fromCustomerType(CustomerType.fromValue(Integer.parseInt(selectedOption)))
                 .generateCustomer();
 
-        String addContactQuestion = scannerWrapper.getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
+        String addContactQuestion = scannerWrapper.getUserInput("Do you want add contact? (enter y for yes and other char for no): ", Function.identity());
 
         while (addContactQuestion.equalsIgnoreCase("y")) {
             addContactTo(customer);
-            addContactQuestion = scannerWrapper.getUserInput("Do you want add contact? (enter y for yes and other char for no): ");
+            addContactQuestion = scannerWrapper.getUserInput("Do you want add contact? (enter y for yes and other char for no): ", Function.identity());
         }
         customerService.addCustomer(customer);
     }
@@ -116,7 +121,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("2. Mobile");
         System.out.println("3. Fax");
         System.out.println("4. Email");
-        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ");
+        String selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Function.identity());
 
 
         switch (selectedOption) {
@@ -144,10 +149,10 @@ public class ConsoleUI implements AutoCloseable {
     }
 
 
-  
+
 
     private void addContactToCustomer(String message, ContactType phoneNumberType, Customer customer) {
-        String value = scannerWrapper.getUserInput(message);
+        String value = scannerWrapper.getUserInput(message, Function.identity());
         Contact contact = new Contact(value, phoneNumberType);
         customer.getContacts().add(contact);
         System.out.println("Contact added successfully");
@@ -194,7 +199,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("8. Search by Brand");
         System.out.println("9. Search by Website");
 
-        String searchOption  = scannerWrapper.getUserInput("Select a search option: ");
+        String searchOption  = scannerWrapper.getUserInput("Select a search option: ", Function.identity());
 
         switch (searchOption) {
             case "1": {
@@ -241,73 +246,88 @@ public class ConsoleUI implements AutoCloseable {
     }
 
     private void searchById() {
-        int searchId = scannerWrapper.getUserInputInt("Enter ID to search: ");
+        int searchId = scannerWrapper
+                .getUserInput("Enter ID to search: ", Integer::valueOf);
         List<Customer> customers = customerService.searchById(searchId);
         customers.forEach(System.out::println);
     }
 
     private void searchByName() {
-        String searchName = scannerWrapper.getUserInput("Enter Name to search: ").trim();
+        String searchName = scannerWrapper
+                .getUserInput("Enter Name to search: ", Function.identity())
+                .trim();
         List<Customer> customers = customerService.searchByName(searchName);
         customers.forEach(System.out::println);
     }
 
     private void searchByLastName() {
-        String searchLastName = scannerWrapper.getUserInput("Enter Last Name to search: ").trim();
+        String searchLastName = scannerWrapper
+                .getUserInput("Enter Last Name to search: ", Function.identity())
+                .trim();
         List<Customer> customers = customerService.searchByLastName(searchLastName);
         customers.forEach(System.out::println);
     }
 
     private void searchByAddress() {
-        String searchAddress = scannerWrapper.getUserInput("Enter Address to search: ").trim();
+        String searchAddress = scannerWrapper
+                .getUserInput("Enter Address to search: ", Function.identity())
+                .trim();
         List<Customer> customers = customerService.searchByAddress(searchAddress);
         customers.forEach(System.out::println);
     }
 
     private void searchIdenticalCode() {
-        String searchIdenticalCode = scannerWrapper.getUserInput("Enter Identical Code to search: ").trim();
+        String searchIdenticalCode = scannerWrapper
+                .getUserInput("Enter Identical Code to search: ", Function.identity())
+                .trim();
         List<Customer> customers = customerService.searchIdenticalCode(searchIdenticalCode);
         customers.forEach(System.out::println);
     }
 
     private void searchByEmail() {
-        String searchEmail = scannerWrapper.getUserInput("Enter Email to search: ").trim();
+        String searchEmail = scannerWrapper
+                .getUserInput("Enter Email to search: ", Function.identity())
+                .trim();
         List<Customer> customers = customerService.searchByEmail(searchEmail);
         customers.forEach(System.out::println);
     }
 
     private void searchByNumber() {
-        String searchNumber = scannerWrapper.getUserInput("Enter Phone Number to search: ").trim();
+        String searchNumber = scannerWrapper.getUserInput("Enter Phone Number to search: ", Function.identity()).trim();
         List<Customer> customers = customerService.searchByNumber(searchNumber);
         customers.forEach(System.out::println);
     }
 
     private void searchByBrand() {
-        String searchBrand = scannerWrapper.getUserInput("Enter Brand to search: ").trim();
+        String searchBrand = scannerWrapper.getUserInput("Enter Brand to search: ", Function.identity()).trim();
         List<Customer> customers = customerService.searchByBrand(searchBrand);
         customers.forEach(System.out::println);
     }
 
     private void searchByWebsite() {
-        String searchWebsite = scannerWrapper.getUserInput("Enter Website to search: ").trim();
+        String searchWebsite = scannerWrapper.getUserInput("Enter Website to search: ", Function.identity()).trim();
         List<Customer> customers = customerService.searchByWebsite(searchWebsite);
         customers.forEach(System.out::println);
     }
 
     private void editCustomer() {
-        int customerIdToEdit = scannerWrapper.getUserInputInt("Enter the ID of the customer you want to edit: ");
+        int customerIdToEdit = scannerWrapper.getUserInput(
+                "Enter the ID of the customer you want to edit: ",
+                Integer::valueOf);
         Customer customerToEdit = customerService.getCustomerById(customerIdToEdit);
         // factory method
 //        AbstractCustomerUI customerUI = AbstractCustomerUI.createCustomerUI(customerToEdit.getType());
 
         AbstractCustomerUI.
                 fromCustomerType(customerToEdit.getType())
-                .editCustomer(customerToEdit, customerService);
+                .editCustomer(customerToEdit, (CustomerServiceImpl) customerService);
 
     }
 
     private void deleteCustomer() {
-        int customerIdToDelete = scannerWrapper.getUserInputInt("Enter the ID of the customer you want to delete: ");
+        int customerIdToDelete = scannerWrapper.getUserInput(
+                "Enter the ID of the customer you want to delete: ",
+                Integer::valueOf);
 //        customerService.deleteCustomer(customerIdToDelete);
         customerService.safeDeleteCustomer(customerIdToDelete);
     }

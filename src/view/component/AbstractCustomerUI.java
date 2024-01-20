@@ -3,8 +3,10 @@ package view.component;
 import model.Contact;
 import model.Customer;
 import model.CustomerType;
-import service.CustomerService;
+import service.impl.CustomerServiceImpl;
 import util.ScannerWrapper;
+
+import java.util.function.Function;
 
 public abstract class AbstractCustomerUI {
     protected final ScannerWrapper scannerWrapper;
@@ -22,8 +24,8 @@ public abstract class AbstractCustomerUI {
 
     public Customer generateCustomer() {
 
-        String name = scannerWrapper.getUserInput("Enter Name: ");
-        String address = scannerWrapper.getUserInput("Enter Address: ");
+        String name = scannerWrapper.getUserInput("Enter Name: ", Function.identity());
+        String address = scannerWrapper.getUserInput("Enter Address: ",Function.identity());
 
         return additionalGenerateCustomer(name, address);
     }
@@ -31,14 +33,15 @@ public abstract class AbstractCustomerUI {
 
     protected abstract Customer additionalGenerateCustomer(String name, String address);
 
-    public abstract void editCustomer(Customer customer, CustomerService customerService);
+    public abstract void editCustomer(Customer customer, CustomerServiceImpl customerService);
 
-    protected void editContact(Customer customer, CustomerService customerService) {
+    protected void editContact(Customer customer, CustomerServiceImpl customerService) {
         System.out.println("List of this customer contacts: ");
         System.out.println(customer.getContacts());
         System.out.println("End of contacts");
 
-        int contactIdToEdit = scannerWrapper.getUserInputInt("Enter the ID of the contact you want to edit: ");
+        int contactIdToEdit = scannerWrapper
+                .getUserInput("Enter the ID of the contact you want to edit: ", Integer::valueOf);
         Contact contactToEdit = customerService.getContentById(customer, contactIdToEdit);
         System.out.println(contactToEdit);
         if (contactToEdit != null) {
@@ -47,11 +50,13 @@ public abstract class AbstractCustomerUI {
             System.out.println("1. Edit contact value");
             System.out.println("2. Delete contact");
 
-            String updateContactOption = scannerWrapper.getUserInput("Enter update option: ");
+            String updateContactOption = scannerWrapper
+                    .getUserInput("Enter update option: ",Function.identity());
 
             switch (updateContactOption) {
                 case "1":
-                    String newValue = scannerWrapper.getUserInput("Enter new value: ");
+                    String newValue = scannerWrapper
+                            .getUserInput("Enter new value: ",Function.identity());
                     contactToEdit.setValue(newValue);
                     System.out.println("Contact updated");
                     break;

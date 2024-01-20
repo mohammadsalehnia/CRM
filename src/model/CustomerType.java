@@ -1,7 +1,6 @@
 package model;
 
 public enum CustomerType {
-
     INDIVIDUAL(1),
     LEGAL(2);
 
