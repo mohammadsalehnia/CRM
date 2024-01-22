@@ -21,43 +21,45 @@ public class ConsoleUI implements AutoCloseable {
         this.customerService = CustomerServiceImpl.getInstance();
     }
 
-    public void startMenu() {
+    public int startMenu() {
 
         System.out.println("CRM Application Started");
-        String selectedOption = "";
+        Integer selectedOption = null;
 
-        while (!selectedOption.equals("0")) {
-
+        do {
             printMenu();
 
-            selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Function.identity());
+            System.out.println("test1");
+            selectedOption = scannerWrapper.getUserInput("Select a menu item: ", Integer::valueOf);
+            System.out.println("test2");
+
 
             switch (selectedOption) {
-                case "1": {
+                case 1: {
                     addCustomer();
                     break;
                 }
-                case "2": {
+                case 2: {
                     printAllCustomers();
                     break;
                 }
-                case "3": {
+                case 3: {
                     searchCustomer();
                     break;
                 }
-                case "4": {
+                case 4: {
                     editCustomer();
                     break;
                 }
-                case "5": {
+                case 5: {
                     deleteCustomer();
                     break;
                 }
-                case "6": {
+                case 6: {
                     printAllDeletedCustomers();
                     break;
                 }
-                case "0": {
+                case 0: {
                     System.out.println("You closed the application");
                     break;
                 }
@@ -67,8 +69,11 @@ public class ConsoleUI implements AutoCloseable {
                 }
             }
         }
+        while (selectedOption != 0);
 
         System.out.println("Bye");
+
+        return selectedOption;
     }
 
     private void printMenu() {
@@ -149,8 +154,6 @@ public class ConsoleUI implements AutoCloseable {
     }
 
 
-
-
     private void addContactToCustomer(String message, ContactType phoneNumberType, Customer customer) {
         String value = scannerWrapper.getUserInput(message, Function.identity());
         Contact contact = new Contact(value, phoneNumberType);
@@ -199,7 +202,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("8. Search by Brand");
         System.out.println("9. Search by Website");
 
-        String searchOption  = scannerWrapper.getUserInput("Select a search option: ", Function.identity());
+        String searchOption = scannerWrapper.getUserInput("Select a search option: ", Function.identity());
 
         switch (searchOption) {
             case "1": {
@@ -314,10 +317,8 @@ public class ConsoleUI implements AutoCloseable {
         int customerIdToEdit = scannerWrapper.getUserInput(
                 "Enter the ID of the customer you want to edit: ",
                 Integer::valueOf);
-        Customer customerToEdit = customerService.getCustomerById(customerIdToEdit);
-        // factory method
-//        AbstractCustomerUI customerUI = AbstractCustomerUI.createCustomerUI(customerToEdit.getType());
 
+        Customer customerToEdit = customerService.getCustomerById(customerIdToEdit);
         AbstractCustomerUI.
                 fromCustomerType(customerToEdit.getType())
                 .editCustomer(customerToEdit, (CustomerServiceImpl) customerService);
